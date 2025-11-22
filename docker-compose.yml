@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: rvkh_pgvector_db
+    environment:
+      POSTGRES_USER: aiuser
+      POSTGRES_PASSWORD: aistrongpass
+      POSTGRES_DB: lmsdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rvkh_ollama_server
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    command: >
+      bash -c "
+      ollama pull intfloat/multilingual-e5-base &&
+      ollama pull qwen2.5:1.5b &&
+      ollama serve
+      "
+
+volumes:
+  pgdata:
+  ollama:
