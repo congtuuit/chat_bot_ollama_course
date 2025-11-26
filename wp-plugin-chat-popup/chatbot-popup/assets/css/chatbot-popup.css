@@ -1,0 +1,190 @@
+/* Tổng thể */
+#cbp-chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    z-index: 9999;
+}
+
+/* Icon mở chat (Floating Button) */
+#cbp-chat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 132, 255, 0.4);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: #fff;
+    overflow: hidden;
+}
+#cbp-chat-icon:hover { transform: scale(1.1); }
+#cbp-chat-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Cửa sổ Chat */
+#cbp-chat-window {
+    width: 350px;
+    height: 500px; /* Cao hơn để xem được nhiều tin nhắn */
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: none; /* JS sẽ toggle cái này */
+    flex-direction: column;
+    overflow: hidden;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    position: absolute; /* Để animation hoạt động mượt từ dưới lên */
+    bottom: 80px;
+    right: 0;
+}
+
+/* Khi active (thêm class này bằng JS nếu muốn animation mượt) */
+#cbp-chat-window.active {
+    display: flex !important;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Header */
+#cbp-chat-header {
+    background: linear-gradient(135deg, #0084ff 0%, #0055ff 100%);
+    color: #fff;
+    padding: 16px 20px;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+#cbp-chat-title { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+#cbp-chat-subtitle { font-size: 12px; opacity: 0.9; }
+#cbp-chat-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+    font-size: 20px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+#cbp-chat-close:hover { opacity: 1; }
+
+/* Vùng tin nhắn */
+#cbp-chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f9f9f9;
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+#cbp-chat-messages::-webkit-scrollbar { width: 6px; }
+#cbp-chat-messages::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+#cbp-chat-messages::-webkit-scrollbar-track { background: transparent; }
+
+/* Message Item */
+.cbp-msg {
+    display: flex;
+    margin-bottom: 12px;
+    align-items: flex-end; /* Căn avatar xuống đáy dòng chat */
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Avatar Bot */
+.cbp-msg.bot .cbp-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #eee;
+}
+.cbp-msg.bot .cbp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Bong bóng chat */
+.cbp-msg .cbp-text {
+    padding: 10px 14px;
+    border-radius: 18px;
+    max-width: 75%;
+    line-height: 1.5;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+/* Style riêng cho Bot */
+.cbp-msg.bot .cbp-text {
+    background: #ffffff;
+    color: #333;
+    border-top-left-radius: 4px; /* Tạo điểm nhấn góc */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Style riêng cho User */
+.cbp-msg.user {
+    justify-content: flex-end;
+}
+.cbp-msg.user .cbp-text {
+    background: #0084ff;
+    color: #fff;
+    border-bottom-right-radius: 4px; /* Tạo điểm nhấn góc */
+    box-shadow: 0 1px 2px rgba(0, 132, 255, 0.3);
+}
+/* Ẩn avatar user để UI gọn hơn (theo chuẩn modern chat) */
+.cbp-msg.user .cbp-avatar { display: none; } 
+
+/* Input Area */
+#cbp-chat-input-area {
+    display: flex;
+    padding: 15px;
+    background: #fff;
+    border-top: 1px solid #eee;
+}
+#cbp-chat-input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #f5f5f5;
+}
+#cbp-chat-input:focus {
+    border-color: #0084ff;
+    background: #fff;
+}
+#cbp-chat-send {
+    margin-left: 10px;
+    background: #0084ff;
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+#cbp-chat-send:hover { background: #006bce; }
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    #cbp-chat-window {
+        width: 100%;
+        height: 90%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+        position: fixed;
+        z-index: 10000;
+    }
+    #cbp-chat-icon { bottom: 20px; right: 20px; }
+}
